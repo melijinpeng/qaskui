@@ -1,0 +1,91 @@
+@import '@/assets/scss/globalVar.scss';
+
+
+body,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+header,
+main,
+footer,
+fieldset,
+article,
+section,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+nav,
+div,
+span {
+	font-weight: 500;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	line-height: 1;
+}
+
+input::placeholder,
+textarea::placeholder,
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+	color: $mcd7;
+}
+
+h1,
+h2,
+h3,
+h4,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+	background-color: $mcfa;
+	user-select:none;
+  /* font-family: Helvetica, Arial, sans-serif; */
+  /* 字体待亚明确认 */
+  /* font-size: 12px; */
+  /* text-align: left; */
+}
+
+img {
+	border: none;
+	vertical-align: middle;
+}
+
+address,
+caption,
+em,
+strong,
+th,
+i {
+	font-style: normal;
+	font-weight: 500;
+}
+
+ol,
+ul {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+}
+
+caption,
+th {
+	text-align: left;
+}
+
+[v-cloak]{
+	display: none;
+}

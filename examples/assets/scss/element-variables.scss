@@ -1,0 +1,17 @@
+// element 全局初始化样式
+@import '@/assets/scss/globalVar.scss';
+$--color-primary: $mc0a;
+$--color-warning: $mcff;
+
+// 文本框右侧计数器
+$--color-info: $mcd7;
+
+$--color-text-primary: $mc30;
+// $--color-text-secondary: $mcd7;
+
+$--border-color-base: $mcd7;
+
+$--color-text-placeholder: $mcd7;
+
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import "~element-ui/packages/theme-chalk/src/index.scss";
