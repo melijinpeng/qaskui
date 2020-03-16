@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <kw-button>button</kw-button>
+      <kw-table></kw-table>
       <!-- <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> -->
     </div>
