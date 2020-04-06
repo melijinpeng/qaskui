@@ -53,9 +53,7 @@
 
 		components: {
 			TableHeader: () => import('./table-header.js'),
-			// TableFooter,
 			TableBody: () => import('./table-body.js'),
-			// ElCheckbox
 		},
 
 		beforeCreate() {
