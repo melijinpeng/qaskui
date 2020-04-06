@@ -1,0 +1,24 @@
+@import './mixins/mixins.scss', './common/var.scss';
+
+@include b(table) {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  background-color: $--color-white;
+	font-size: 14px;
+
+	@include e(header) {
+		color: $--table-header-font-color;
+
+		.cell {
+			background-color: $--color-primary-light-9;
+		}
+	}
+
+	@include e(body) {
+		background-color: $--color-white;
+	}
+}

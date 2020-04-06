@@ -1,0 +1,207 @@
+@import "function";
+@import "../common/var";
+
+/* Break-points
+ -------------------------- */
+@mixin res($key, $map: $--breakpoints) {
+  // 循环断点Map，如果存在则返回
+  @if map-has-key($map, $key) {
+    @media only screen and #{inspect(map-get($map, $key))} {
+      @content;
+    }
+  } @else {
+    @warn "Undefeined points: `#{$map}`";
+  }
+}
+
+/* Scrollbar
+ -------------------------- */
+@mixin scroll-bar {
+  $--scrollbar-thumb-background: #b4bccc;
+  $--scrollbar-track-background: #fff;
+
+  &::-webkit-scrollbar {
+    z-index: 11;
+    width: 6px;
+
+    &:horizontal {
+      height: 6px;
+    }
+
+    &-thumb {
+      border-radius: 5px;
+      width: 6px;
+      background: $--scrollbar-thumb-background;
+    }
+
+    &-corner {
+      background: $--scrollbar-track-background;
+    }
+
+    &-track {
+      background: $--scrollbar-track-background;
+
+      &-piece {
+        background: $--scrollbar-track-background;
+        width: 6px;
+      }
+    }
+  }
+}
+
+/* Placeholder
+ -------------------------- */
+@mixin placeholder {  // 这个应该用不到，sass loader 自动生成
+  &::-webkit-input-placeholder {
+    @content;
+  }
+
+  &::-moz-placeholder {
+    @content;
+  }
+
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+/* BEM
+ -------------------------- */
+@mixin b($block) {  // @include b(table) {}
+  $B: $namespace+'-'+$block !global;
+
+  .#{$B} {
+    @content;
+  }
+}
+
+@mixin e($element) {
+  // 多参数: @include e((fixed, fixed-right)) {}
+  // 实际效果: .el-table__fixed,.el-table__fixed-right {}
+  
+  $E: $element !global;
+  $selector: &;
+  $currentSelector: "";
+  @each $unit in $element {
+    $currentSelector: #{$currentSelector + "." + $B + $element-separator + $unit + ","};
+  }
+
+  @if hitAllSpecialNestRule($selector) {
+    @at-root {
+      #{$selector} {
+        #{$currentSelector} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @at-root {
+      #{$currentSelector} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin m($modifier) {
+  // 多参数: @include m((group, border)) {}
+  // 实际效果: .el-table--border,.el-table--group {}
+  
+  $selector: &;
+  $currentSelector: "";
+  @each $unit in $modifier {
+    $currentSelector: #{$currentSelector + & + $modifier-separator + $unit + ","};
+  }
+
+  @at-root {
+    #{$currentSelector} {
+      @content;
+    }
+  }
+}
+
+// m的变异版，多了个提供了设置flag，少了个设置多多个修饰符。同时设置修饰符和元素flag,flag在前,修饰符在后，
+@mixin configurable-m($modifier, $E-flag: false) {
+  // border mode
+  $selector: &;
+  $interpolation: '';
+
+  @if $E-flag {
+    $interpolation: $element-separator + $E-flag;
+  }
+
+  @at-root {
+    // .el-table
+    #{$selector} {
+      .#{$B+$interpolation+$modifier-separator+$modifier} {
+      // .el-table--border
+      // .el-table--model--border
+        @content;
+      }
+    }
+  }
+}
+
+@mixin spec-selector($specSelector: '', $element: $E, $modifier: false, $block: $B) { // 设置自定义的选择器
+  // -xselector, tobdy, border, el-table
+  $modifierCombo: '';
+
+  @if $modifier {
+    $modifierCombo: $modifier-separator + $modifier;
+  }
+
+  @at-root {
+    // .el-table-xselector.el-table__tbody--border
+    #{&}#{$specSelector}.#{$block+$element-separator+$element+$modifierCombo} {
+      @content;
+    }
+  }
+}
+
+@mixin meb($modifier: false, $element: $E, $block: $B) {  // 同时设置bem，是混入b/e/m的结合混入
+  // border, placeholder, table
+  
+  $selector: &;
+  $modifierCombo: '';
+
+  @if $modifier { // 如修饰符存在，则拼接修饰符前缀
+    $modifierCombo: $modifier-separator + $modifier;
+  }
+
+  @at-root {
+    // .el-table
+    #{$selector} {
+      // .el-table__placeholder--border
+      .#{$block+$element-separator+$element+$modifierCombo} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin when($state) { // 设置状态类， is- @include when(success) {}
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+@mixin share-rule($name) {  // 分享规则
+  $rule-name: '%shared-'+$name;
+
+  @at-root #{$rule-name} {
+    @content;
+  }
+}
+
+@mixin extend-rule($name) { // 继承规则,使用这个前,必须先试用上面的分享规则
+  @extend #{'%shared-'+$name};
+}
+
+@mixin pseudo($pseudo) {  // 添加伪类 @include pseudo(last-of-type) {}
+  @at-root #{&}#{':#{$pseudo}'} {
+    @content;
+  }
+}
+

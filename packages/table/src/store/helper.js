@@ -1,41 +1,26 @@
-import Store from './index';
-import debounce from 'throttle-debounce/debounce';
+import Store from './index'
 
-export function createStore(table, initialState = {}) {
-  if (!table) {
-    throw new Error('Table is required.');
-  }
+const createStore = () => new Store()
 
-  const store = new Store();
-  store.table = table;
-  // fix https://github.com/ElemeFE/element/issues/14075
-  // related pr https://github.com/ElemeFE/element/pull/14146
-  store.toggleAllSelection = debounce(10, store._toggleAllSelection);
-  Object.keys(initialState).forEach(key => {
-    store.states[key] = initialState[key];
-  });
-  return store;
+const mapState = function(arg) {
+	let state = {}
+	let type = typeof arg
+	if (Array.isArray(arg)) {
+		arg.forEach(item => state[item] = function() {
+			return this.store.state[item]
+		})
+		return state
+	} else if (type === 'object') {
+		for (let key in arg) {
+			if (typeof arg[key] === 'string') state[String(key)] = function() {
+				return this.store.state[arg[key]]
+			}
+			else if (typeof arg[key] === 'function') state[String(key)] = function() {
+				return arg[key](this.store.state)
+			}
+		}
+		return state
+	} else throw new Error(`type check failed for mapState. Expected Array, Object, got ${type.replace(/^\w?/, type[0].toUpperCase())}`)
 }
 
-export function mapStates(mapper) {
-  const res = {};
-  Object.keys(mapper).forEach(key => {
-    const value = mapper[key];
-    let fn;
-    if (typeof value === 'string') {
-      fn = function() {
-        return this.store.states[value];
-      };
-    } else if (typeof value === 'function') {
-      fn = function() {
-        return value.call(this, this.store.states);
-      };
-    } else {
-      console.error('invalid value type');
-    }
-    if (fn) {
-      res[key] = fn;
-    }
-  });
-  return res;
-};
+export {createStore, mapState}
