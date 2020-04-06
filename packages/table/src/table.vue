@@ -1,6 +1,5 @@
 <template>
 	<div class="kw-table">
-		<h1>这是table组件</h1>
 		<div class="hidden-columns" ref="hiddenColumns"><slot/></div>
 		<div class="kw-table__header-wrap">
 			<table-header :store="store"/>
